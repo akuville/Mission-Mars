@@ -25,11 +25,12 @@ public class PlayerController : MonoBehaviour {
     private bool jetpackOn = false;
     private bool hasGun = false;
     private bool shootingCooldownOn = false;
+    private bool moving = false;
+    private bool inGravityfield = false;
 
     private float move;
     private float jetPush;
     private int state;
-    private float platformpush = 0;
     private float gravitypush = 0;
 
 	// Use this for initialization
@@ -42,11 +43,55 @@ public class PlayerController : MonoBehaviour {
 	// Update is called once per frame
 	void Update ()
     {
+        //camera follow
+        Camera cam = Camera.main;
+        cam.transform.position = new Vector3(hero.position.x, hero.position.y, -10);
+
+        //player actions are done only if not dead
         if (dead == false)
         {
             //getting move direction and flipping
-            move = Input.GetAxis("Horizontal");
-            if (move > 0 && facingRight == false) FlipHero(); else if (move < 0 && facingRight == true) FlipHero();
+            //move = Input.GetAxis("Horizontal");
+            //if (move > 0 && facingRight == false) FlipHero(); else if (move < 0 && facingRight == true) FlipHero();
+            
+            //moving with arrow left and right
+            if (Input.GetKeyDown(KeyCode.LeftArrow))
+            {
+                moving = true;
+                if (facingRight)
+                {
+                    FlipHero();
+                    
+                }
+
+            }else if (Input.GetKeyDown(KeyCode.RightArrow))
+            {
+                moving = true;
+                if (facingRight == false)
+                {
+                    FlipHero();
+                    
+                }
+            }
+
+            if (Input.GetKeyUp(KeyCode.LeftArrow))
+            {
+                if (facingRight == false)
+                {
+                    moving = false;
+                    hero.velocity = new Vector2(0, hero.velocity.y);
+                }
+                
+            }
+
+            if (Input.GetKeyUp(KeyCode.RightArrow))
+            {
+                if (facingRight)
+                {
+                    moving = false;
+                    hero.velocity = new Vector2(0, hero.velocity.y);
+                }
+            }
 
             //jumping with Up Arrow key, also using jetpack
             if (Input.GetKeyDown(KeyCode.UpArrow))
@@ -63,6 +108,7 @@ public class PlayerController : MonoBehaviour {
                 {
                     //normal jump
                     hero.AddForce(new Vector2(0, jumpSpeed));
+                    onGround = false;
                 }
                 
                 onGround = false;
@@ -79,7 +125,7 @@ public class PlayerController : MonoBehaviour {
             //checking if moving and setting animation
             if (hero.velocity.x != 0)
             {
-                if (hero.velocity.x == platformpush)
+                if (moving == false)
                 {
                     state = 0;
                 }
@@ -147,11 +193,23 @@ public class PlayerController : MonoBehaviour {
         if (dead == false)
         {
             //player can move left and right if not hitting a wall
-            if (hittingWall == false)
+            if (hittingWall == false && moving)
             {
-                hero.velocity = new Vector2(move * speed + platformpush, hero.velocity.y + gravitypush);
+                if (facingRight)
+                {
+                    hero.velocity = new Vector2(speed, hero.velocity.y);
+                }
+                else
+                {
+                    hero.velocity = new Vector2(-1 * speed, hero.velocity.y);
+                }
+                
             }
-
+            //when in gravityfield green
+            if (inGravityfield)
+            {
+                hero.velocity = new Vector2(hero.velocity.x, hero.velocity.y + gravitypush);
+            }
             //jetpack stuff
             if (jetpackOn)
             {
@@ -223,9 +281,15 @@ public class PlayerController : MonoBehaviour {
         }
 
         //collision with the gate
-        if (collision.gameObject.tag == "Gate" && hasKey)
+        if (collision.gameObject.tag == "Gate")
         {
-            Destroy(collision.gameObject, 0.1f);
+            hittingWall = true;
+            if (hasKey)
+            {
+                hero.MovePosition(new Vector2(hero.position.x + 1, hero.position.y));
+                Destroy(collision.gameObject, 0.1f);
+                hittingWall = false;
+            }
         }
 
     }
@@ -279,6 +343,7 @@ public class PlayerController : MonoBehaviour {
         if (collision.gameObject.tag == "Gravityfield_green")
         {
             gravitypush = 0.8f;
+            inGravityfield = true;
         }
     }
     void OnTriggerExit2D(Collider2D collision)
@@ -286,22 +351,21 @@ public class PlayerController : MonoBehaviour {
         if (collision.gameObject.tag == "Gravityfield_green")
         {
             gravitypush = 0;
+            inGravityfield = false;
         }
     }
     void OnCollisionExit2D(Collision2D collision)
     {
-        string na = collision.gameObject.name;
-        if (na == "Platformfloor1" || na == "Platformfloor2" || na == "Platformfloor3" || na == "Platformfloor4")
-        {
-            platformpush = 0;
-        }
-
         if (collision.gameObject.tag == "Floor")
         {
-            onGround = false;
+            if (hero.velocity.y != 0)
+            {
+                onGround = false;
+            }
+            
         }
 
-        if (collision.gameObject.tag == "Wall")
+        if (collision.gameObject.tag == "Wall" || collision.gameObject.tag == "Gate")
         {
             hittingWall = false;
         }
@@ -314,18 +378,21 @@ public class PlayerController : MonoBehaviour {
         
         if (na == "Platformfloor1" || na == "Platformfloor2" || na == "Platformfloor3" || na == "Platformfloor4")
         {
-            
-            float vel = go.GetComponent<Rigidbody2D>().velocity.x;
-            
-            if (vel != 0)
+            if (onGround)
             {
-                platformpush = vel;
+                if (moving == false)
+                {
+                    hero.velocity = go.GetComponent<Rigidbody2D>().velocity;
+                }
+                else
+                {
+                    hero.velocity = new Vector2(go.GetComponent<Rigidbody2D>().velocity.x + hero.velocity.x, go.GetComponent<Rigidbody2D>().velocity.y);
+                }
             }
-            else
-            {
-                platformpush = 0;
-            }
+            
         }
+        //bug fix for when player is hitting BOTH wall and gate at the same time
+        if (go.tag == "Gate") hittingWall = true;
     }
 
     private void FlipHero()
@@ -336,7 +403,21 @@ public class PlayerController : MonoBehaviour {
         transform.localScale = theScale;
 
         //so he doesnt get stuck in the wall (a bug fix)
-        hittingWall = false;
+        //hittingWall = false;
+        if (hittingWall)
+        {
+            hero.velocity = new Vector2(0, hero.velocity.y);
+            
+            if (facingRight)
+            {
+                hero.AddForce(new Vector2(150, 0));
+            }
+            else
+            {
+                hero.AddForce(new Vector2(-150, 0));
+            }
+        }
+        
     }
 
     private void ResetGame()
