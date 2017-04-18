@@ -1,14 +1,17 @@
 fileFormatVersion: 2
-guid: 6c0eb0fb2c590634e988a0c64fef50f3
-timeCreated: 1492522160
+guid: 7cd4440836f383046920d04b785d2680
+timeCreated: 1492524864
 licenseType: Free
 TextureImporter:
   fileIDToRecycleName:
-    21300000: 1
-    21300002: 2
-    21300004: 3
-    21300006: 4
-    21300008: 5
+    21300000: jump(1)
+    21300002: jump(2)
+    21300004: jump(3)
+    21300006: jump(4)
+    21300008: jump(5)
+    21300010: jump(6)
+    21300012: jump(7)
+    21300014: jump(8)
   serializedVersion: 4
   mipmaps:
     mipMapMode: 0
@@ -75,65 +78,104 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: 1
+      name: jump(1)
       rect:
         serializedVersion: 2
         x: 0
         y: 0
-        width: 306
-        height: 414
+        width: 488
+        height: 495
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: 2
+      name: jump(2)
       rect:
         serializedVersion: 2
-        x: 304
+        x: 488
         y: 0
-        width: 306
-        height: 414
+        width: 488
+        height: 495
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: 3
+      name: jump(3)
       rect:
         serializedVersion: 2
-        x: 610
+        x: 976
         y: 0
-        width: 306
-        height: 414
+        width: 488
+        height: 495
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: 4
+      name: jump(4)
       rect:
         serializedVersion: 2
-        x: 918
+        x: 1469
         y: 0
-        width: 306
-        height: 414
+        width: 488
+        height: 495
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: 5
+      name: jump(5)
       rect:
         serializedVersion: 2
-        x: 1224
+        x: 1957
         y: 0
-        width: 306
-        height: 414
+        width: 488
+        height: 495
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: jump(6)
+      rect:
+        serializedVersion: 2
+        x: 2440
+        y: 0
+        width: 488
+        height: 495
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: jump(7)
+      rect:
+        serializedVersion: 2
+        x: 2928
+        y: 0
+        width: 488
+        height: 495
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: jump(8)
+      rect:
+        serializedVersion: 2
+        x: 3416
+        y: 0
+        width: 488
+        height: 495
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
